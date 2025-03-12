@@ -25,9 +25,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
   dateFilters, 
   selectedFilter, 
   onFilterChange,
-  selectedIntent = 'all-intents',
+  selectedIntent = 'billing',
   onIntentChange = () => {},
-  selectedAgent = 'all-agents',
+  selectedAgent = 'ai-only',
   onAgentChange = () => {},
 }) => {
   return (
@@ -59,10 +59,11 @@ const FilterBar: React.FC<FilterBarProps> = ({
             <SelectValue placeholder="Filter by Intent" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all-intents">All Intents</SelectItem>
             <SelectItem value="account">Account Intents</SelectItem>
             <SelectItem value="billing">Billing Intents</SelectItem>
             <SelectItem value="support">Support Intents</SelectItem>
+            <SelectItem value="technical">Technical Issues</SelectItem>
+            <SelectItem value="product">Product Inquiries</SelectItem>
           </SelectContent>
         </Select>
         
@@ -74,7 +75,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
             <SelectValue placeholder="Filter by Agent" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all-agents">All Agents</SelectItem>
             <SelectItem value="ai-only">AI Only</SelectItem>
             <SelectItem value="live-only">Live Agents Only</SelectItem>
           </SelectContent>
