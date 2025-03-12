@@ -5,7 +5,7 @@ import CustomerDecompositionTree from './CustomerDecompositionTree';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { IntentData, KPIData, SentimentData } from '@/utils/mockData';
 import CustomerPathwayTree from '@/components/CustomerPathwayTree';
-import { generateCustomerPathwayTreeData } from '@/components/CustomerPathwayTreeData';
+import { generateCustomerPathwayTreeData } from '@/components/customerPathway';
 
 interface CustomerJourneyTabProps {
   kpiData: KPIData[];
@@ -22,6 +22,14 @@ const CustomerJourneyTab: React.FC<CustomerJourneyTabProps> = ({
 }) => {
   // Get mock data for customer pathway tree
   const customerPathwayData = generateCustomerPathwayTreeData();
+  
+  // Calculate some metrics for the child components
+  const totalCalls = kpiData.find(kpi => kpi.title === 'Total Calls')?.value || 0;
+  const digitalAgentCalls = kpiData.find(kpi => kpi.title === 'Digital Agent')?.value || 0;
+  const liveAgentCalls = kpiData.find(kpi => kpi.title === 'Live Agent')?.value || 0;
+  const escalatedCalls = kpiData.find(kpi => kpi.title === 'Escalations')?.value || 0;
+  const avgHandleTime = kpiData.find(kpi => kpi.title === 'Avg. Handle Time')?.value || 0;
+  const totalConversations = sentimentData.length;
   
   return (
     <div className="space-y-6">
@@ -46,8 +54,20 @@ const CustomerJourneyTab: React.FC<CustomerJourneyTabProps> = ({
         </div>
       ) : (
         <>
-          <CustomerCallJourney />
-          <CustomerDecompositionTree />
+          <CustomerCallJourney 
+            totalCalls={totalCalls}
+            digitalAgentCalls={digitalAgentCalls}
+            liveAgentCalls={liveAgentCalls}
+            escalatedCalls={escalatedCalls}
+            avgHandleTime={avgHandleTime}
+            resolutionRate={85}
+            firstContactResolution={75}
+          />
+          <CustomerDecompositionTree 
+            totalConversations={totalConversations}
+            sentimentData={sentimentData}
+            topIntents={topCompletedIntents}
+          />
         </>
       )}
     </div>

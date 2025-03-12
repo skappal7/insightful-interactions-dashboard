@@ -21,6 +21,7 @@ export interface ResponseData {
   frequency: number;
   aiHandled: boolean;
   completionRate: number;
+  intent?: string; // Added the intent field to fix type errors
 }
 
 export interface SentimentData {
@@ -30,6 +31,8 @@ export interface SentimentData {
   endSentiment: 'positive' | 'neutral' | 'negative';
   aiHandled: boolean;
   date: string;
+  intent?: string; // Added the intent field to fix type errors
+  conversationId?: string; // Added the conversationId field to fix type errors
 }
 
 export interface TrendPoint {

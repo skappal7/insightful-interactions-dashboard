@@ -1,29 +1,14 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChevronRight, ChevronDown, Users, Bot, MessageSquare, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-// Define tree node structure
-interface TreeNode {
-  id: string;
-  name: string;
-  type: 'ai' | 'agent' | 'customer' | 'system';
-  children?: TreeNode[];
-  data?: {
-    duration?: string;
-    sentiment?: 'positive' | 'neutral' | 'negative';
-    time?: string;
-    message?: string;
-  };
-}
+import { TreeNode } from '@/components/customerPathway';
 
 interface CustomerPathwayTreeProps {
   title: string;
   data: TreeNode[];
 }
 
-// Component for each tree node
 const TreeNodeComponent: React.FC<{ 
   node: TreeNode; 
   level: number;
@@ -33,7 +18,6 @@ const TreeNodeComponent: React.FC<{
   const isExpanded = expanded[node.id];
   const hasChildren = node.children && node.children.length > 0;
   
-  // Get icon based on node type
   const getNodeIcon = () => {
     switch (node.type) {
       case 'ai': return <Bot className="h-4 w-4 text-blue-500" />;
@@ -43,7 +27,6 @@ const TreeNodeComponent: React.FC<{
     }
   };
   
-  // Get color class based on sentiment
   const getSentimentColor = () => {
     if (!node.data?.sentiment) return '';
     
@@ -98,7 +81,6 @@ const TreeNodeComponent: React.FC<{
         />
       ))}
       
-      {/* Show message content if available and expanded */}
       {node.data?.message && isExpanded && (
         <div className="ml-10 pl-4 border-l border-dashed border-gray-300 py-2 text-sm text-muted-foreground">
           {node.data.message}
