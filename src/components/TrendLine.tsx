@@ -1,13 +1,26 @@
 
 import React from 'react';
-import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Line, LineChart, ResponsiveContainer, Tooltip, TooltipProps } from 'recharts';
 import { TrendPoint } from '@/utils/mockData';
+import { Card } from '@/components/ui/card';
 
 interface TrendLineProps {
   data: TrendPoint[];
   color?: string;
   height?: number;
 }
+
+const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+  if (active && payload && payload.length) {
+    return (
+      <Card className="p-2 shadow-lg border text-sm bg-white dark:bg-slate-800">
+        <div className="font-medium">{`Value: ${Math.round(payload[0].value as number)}`}</div>
+        <div className="text-muted-foreground text-xs">{`Date: ${payload[0].payload.date}`}</div>
+      </Card>
+    );
+  }
+  return null;
+};
 
 const TrendLine: React.FC<TrendLineProps> = ({ 
   data, 
@@ -18,19 +31,7 @@ const TrendLine: React.FC<TrendLineProps> = ({
     <div className="w-full" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
-          <Tooltip
-            content={({ active, payload }) => {
-              if (active && payload && payload.length) {
-                return (
-                  <div className="p-2 bg-background border rounded shadow-sm text-xs">
-                    <p>{`Value: ${payload[0].value}`}</p>
-                    <p>{`Date: ${payload[0].payload.date}`}</p>
-                  </div>
-                );
-              }
-              return null;
-            }}
-          />
+          <Tooltip content={<CustomTooltip />} />
           <Line 
             type="monotone" 
             dataKey="value" 
