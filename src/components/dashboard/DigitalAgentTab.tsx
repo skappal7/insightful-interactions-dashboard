@@ -66,7 +66,7 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
         ))}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 overflow-visible">
         {digitalAgentKPIs.slice(3).map((kpi) => (
           <KPIWidget
             key={kpi.title}
@@ -80,7 +80,7 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
         ))}
         
         {/* Overall Sentiment Widget */}
-        <Card className="dashboard-card overflow-hidden transition-all duration-300">
+        <Card className="dashboard-card overflow-visible transition-all duration-300">
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium">Overall Sentiment</CardTitle>
             <TooltipProvider>
@@ -90,9 +90,9 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
                 </TooltipTrigger>
                 <TooltipContent 
                   side="top"
-                  className="bg-white dark:bg-slate-800 p-2 rounded-md shadow-lg z-[100]"
+                  className="bg-white dark:bg-slate-800 p-2 rounded-md shadow-lg"
                   avoidCollisions={true}
-                  collisionPadding={16}
+                  collisionPadding={20}
                 >
                   <p className="w-64">Overall sentiment distribution across AI-handled conversations</p>
                 </TooltipContent>
@@ -119,8 +119,8 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
         </Card>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <Card className="dashboard-card overflow-hidden transition-all duration-300">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 overflow-visible">
+        <Card className="dashboard-card overflow-visible transition-all duration-300">
           <CardContent className="p-4">
             <h3 className="text-base font-medium mb-4">AI Handled Conversations (7-Day Trend)</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -128,7 +128,7 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip wrapperStyle={{ zIndex: 1000 }} />
+                <Tooltip wrapperStyle={{ zIndex: 9999, position: 'fixed' }} />
                 <Legend />
                 <Bar dataKey="ai" fill="#60A5FA" name="AI Handled" />
               </BarChart>

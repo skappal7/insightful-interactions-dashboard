@@ -197,12 +197,36 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Tooltip positioning fix */
 .radix-tooltip-content {
-  z-index: 100 !important;
+  z-index: 9999 !important;
   max-width: 250px;
-  position: relative;
+  pointer-events: none;
 }
 
 /* Make sure all tooltips are visible */
 [data-radix-popper-content-wrapper] {
-  z-index: 100 !important;
+  z-index: 9999 !important;
+  position: fixed;
+}
+
+/* Allow tooltips to overflow containers */
+.dashboard-card {
+  overflow: visible !important;
+}
+
+/* Allow tooltip containers to overflow */
+[data-state=open] {
+  overflow: visible !important;
+}
+
+/* Ensure tooltip trigger elements don't clip their tooltips */
+[data-state=delayed-open],
+[data-state=instant-open] {
+  overflow: visible !important;
+}
+
+/* Recharts tooltip fix */
+.recharts-tooltip-wrapper {
+  z-index: 9999 !important;
+  position: fixed;
+  pointer-events: none;
 }

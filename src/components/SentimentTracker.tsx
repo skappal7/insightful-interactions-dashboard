@@ -36,17 +36,19 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
   const safeEffectivenessData = ensureData(effectivenessData);
   
   return (
-    <Card className="dashboard-card col-span-full">
+    <Card className="dashboard-card col-span-full overflow-visible">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="text-base font-medium">Sentiment Analysis & Movement</CardTitle>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Info className="h-4 w-4 text-muted-foreground cursor-help" />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className="w-64">Analysis of customer sentiment throughout conversations and how it changes over time</p>
-          </TooltipContent>
-        </Tooltip>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent side="top" className="bg-white dark:bg-slate-800 shadow-lg p-2">
+              <p className="w-64">Analysis of customer sentiment throughout conversations and how it changes over time</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

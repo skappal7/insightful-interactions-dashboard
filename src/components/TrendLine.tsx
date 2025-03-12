@@ -13,7 +13,7 @@ interface TrendLineProps {
 const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
-      <Card className="p-2 shadow-lg border text-sm bg-white dark:bg-slate-800 z-[100]">
+      <Card className="p-2 shadow-lg border text-sm bg-white dark:bg-slate-800 z-[9999]">
         <div className="font-medium text-black dark:text-white">{`Value: ${Math.round(payload[0].value as number)}`}</div>
         <div className="text-muted-foreground text-xs">{`Date: ${payload[0].payload.date}`}</div>
       </Card>
@@ -28,10 +28,14 @@ const TrendLine: React.FC<TrendLineProps> = ({
   height = 40 
 }) => {
   return (
-    <div className="w-full" style={{ height }}>
+    <div className="w-full overflow-visible" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
-          <Tooltip content={<CustomTooltip />} wrapperStyle={{ zIndex: 1000 }} />
+          <Tooltip 
+            content={<CustomTooltip />} 
+            wrapperStyle={{ zIndex: 9999, position: 'absolute' }} 
+            cursor={{ strokeDasharray: '3 3' }}
+          />
           <Line 
             type="monotone" 
             dataKey="value" 

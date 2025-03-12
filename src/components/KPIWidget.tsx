@@ -57,7 +57,7 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
   };
   
   return (
-    <Card className="dashboard-card overflow-hidden transition-all duration-300">
+    <Card className="dashboard-card overflow-visible transition-all duration-300">
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-1">
           <div className="text-sm font-medium text-muted-foreground flex items-center gap-1 relative">
@@ -71,9 +71,9 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
                   <TooltipContent 
                     side="top" 
                     align="center" 
-                    className="max-w-xs bg-white dark:bg-slate-800 shadow-xl border rounded-lg p-3 z-[100]"
+                    className="max-w-xs bg-white dark:bg-slate-800 shadow-xl border rounded-lg p-3"
                     avoidCollisions={true}
-                    collisionPadding={16}
+                    collisionPadding={20}
                   >
                     <p className="text-xs">{description}</p>
                   </TooltipContent>
