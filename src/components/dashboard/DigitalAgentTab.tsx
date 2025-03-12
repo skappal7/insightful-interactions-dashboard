@@ -17,6 +17,10 @@ interface DigitalAgentTabProps {
   topCompletedIntents: IntentData[];
   kpiDescriptions: Record<string, string>;
   barData: Array<{name: string, ai: number, agent: number}>;
+  selectedIntent: string | null;
+  selectedResponse: string | null;
+  onSelectIntent: (intent: string | null) => void;
+  onSelectResponse: (response: string | null) => void;
 }
 
 const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
@@ -25,7 +29,11 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
   aiResponses,
   topCompletedIntents,
   kpiDescriptions,
-  barData
+  barData,
+  selectedIntent,
+  selectedResponse,
+  onSelectIntent,
+  onSelectResponse
 }) => {
   // Filter KPIs for Digital Agent section
   const digitalAgentKPIs = kpiData.filter(kpi => 
@@ -140,6 +148,8 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
           data={aiResponses} 
           title="AI-Handled Responses" 
           aiHandled={true}
+          selectedResponse={selectedResponse}
+          onSelectResponse={onSelectResponse}
         />
       </div>
       
@@ -147,6 +157,8 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
         <IntentTable 
           data={topCompletedIntents.filter(intent => intent.aiCompleted > intent.liveAgentCompleted)} 
           title="Top AI-Completed Intents" 
+          selectedIntent={selectedIntent}
+          onSelectIntent={onSelectIntent}
         />
       </div>
     </>

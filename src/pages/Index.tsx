@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import DashboardHeader from '@/components/DashboardHeader';
 import FilterBar from '@/components/FilterBar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LayoutDashboard, Users, Bot, MessageSquare, Map } from 'lucide-react';
+import { LayoutDashboard, Users, Bot, MessageSquare, Map, X } from 'lucide-react';
 
 // Import the refactored tab components
 import OverviewTab from '@/components/dashboard/OverviewTab';
@@ -27,7 +27,12 @@ const Index = () => {
     liveAgentResponses,
     sentimentData,
     barData,
-    handleFilterChange
+    handleFilterChange,
+    selectedIntent,
+    selectedResponse,
+    setSelectedIntent,
+    setSelectedResponse,
+    resetFilters
   } = useDashboardData();
   
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -51,6 +56,38 @@ const Index = () => {
         selectedFilter={selectedFilter}
         onFilterChange={handleFilterChange}
       />
+      
+      {/* Show active filters if any */}
+      {(selectedIntent || selectedResponse) && (
+        <div className="flex items-center gap-2 mt-2 mb-4 py-2 px-3 bg-muted/40 rounded-md text-sm">
+          <span className="font-medium">Active filters:</span>
+          
+          {selectedIntent && (
+            <div className="flex items-center gap-1 bg-primary/10 text-primary rounded-full px-2 py-1 text-xs">
+              <span>Intent: {selectedIntent}</span>
+              <button onClick={() => setSelectedIntent(null)} className="text-primary/70 hover:text-primary">
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          )}
+          
+          {selectedResponse && (
+            <div className="flex items-center gap-1 bg-primary/10 text-primary rounded-full px-2 py-1 text-xs">
+              <span>Response: {selectedResponse}</span>
+              <button onClick={() => setSelectedResponse(null)} className="text-primary/70 hover:text-primary">
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          )}
+          
+          <button 
+            onClick={resetFilters}
+            className="ml-auto text-xs underline text-muted-foreground hover:text-foreground"
+          >
+            Clear all filters
+          </button>
+        </div>
+      )}
       
       <Tabs defaultValue="overview" className="w-full" onValueChange={setActiveTab}>
         <TabsList className="w-full bg-background border-b mb-6">
@@ -84,6 +121,10 @@ const Index = () => {
             trendData={trendData}
             summaryHtml={summaryHtml}
             kpiDescriptions={kpiDescriptions}
+            selectedIntent={selectedIntent}
+            selectedResponse={selectedResponse}
+            onSelectIntent={setSelectedIntent}
+            onSelectResponse={setSelectedResponse}
           />
         </TabsContent>
         
@@ -95,6 +136,10 @@ const Index = () => {
             topCompletedIntents={topCompletedIntents}
             kpiDescriptions={kpiDescriptions}
             barData={barData}
+            selectedIntent={selectedIntent}
+            selectedResponse={selectedResponse}
+            onSelectIntent={setSelectedIntent}
+            onSelectResponse={setSelectedResponse}
           />
         </TabsContent>
         
@@ -107,6 +152,10 @@ const Index = () => {
             kpiDescriptions={kpiDescriptions}
             barData={barData}
             sentimentData={sentimentData}
+            selectedIntent={selectedIntent}
+            selectedResponse={selectedResponse}
+            onSelectIntent={setSelectedIntent}
+            onSelectResponse={setSelectedResponse}
           />
         </TabsContent>
         
@@ -121,6 +170,7 @@ const Index = () => {
             kpiData={kpiData}
             sentimentData={sentimentData}
             topCompletedIntents={topCompletedIntents}
+            useTreeView={true}
           />
         </TabsContent>
       </Tabs>

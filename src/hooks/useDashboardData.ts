@@ -33,6 +33,12 @@ interface DashboardData {
   handleFilterChange: (filter: string) => void;
   barData: Array<{name: string, ai: number, agent: number}>;
   journeyData?: any;
+  selectedIntent: string | null;
+  selectedResponse: string | null;
+  setSelectedIntent: (intent: string | null) => void;
+  setSelectedResponse: (response: string | null) => void;
+  getFilteredData: (type: string) => any[];
+  resetFilters: () => void;
 }
 
 export const useDashboardData = (): DashboardData => {
@@ -44,6 +50,10 @@ export const useDashboardData = (): DashboardData => {
   const [trendData, setTrendData] = useState(generateTrendData());
   const [dateFilters, setDateFilters] = useState(generateDateFilters());
   const [selectedFilter, setSelectedFilter] = useState('Last 7 Days');
+  
+  // Cross-filtering state
+  const [selectedIntent, setSelectedIntent] = useState<string | null>(null);
+  const [selectedResponse, setSelectedResponse] = useState<string | null>(null);
   
   // Derived data
   const topCompletedIntents = getTopIntents(intentData, true);
@@ -60,6 +70,81 @@ export const useDashboardData = (): DashboardData => {
     kpiData.find(kpi => kpi.title === 'Recognition %')?.value || 0,
     kpiData.find(kpi => kpi.title === 'Completion %')?.value || 0
   );
+  
+  // Filter data based on selections
+  const getFilteredData = (type: string) => {
+    if (!selectedIntent && !selectedResponse) {
+      // No filters applied, return original data
+      switch (type) {
+        case 'intents': return intentData;
+        case 'responses': return responseData;
+        case 'sentiment': return sentimentData;
+        case 'kpi': return kpiData;
+        default: return [];
+      }
+    }
+    
+    // Apply intent filter
+    if (selectedIntent) {
+      switch (type) {
+        case 'responses':
+          // Filter responses related to the selected intent
+          return responseData.filter(r => 
+            r.intent === selectedIntent || 
+            r.query.toLowerCase().includes(selectedIntent.toLowerCase())
+          );
+        case 'sentiment':
+          // Filter sentiment data related to the selected intent
+          return sentimentData.filter(s => 
+            s.intent === selectedIntent || 
+            s.conversationId.toString().includes(selectedIntent.toLowerCase())
+          );
+        case 'kpi':
+          // Adjust KPI data based on selected intent
+          // For demo purposes, we'll just modify the values by a random factor
+          return kpiData.map(kpi => ({
+            ...kpi,
+            value: kpi.value * (0.7 + Math.random() * 0.6),
+            trend: kpi.trend * (0.8 + Math.random() * 0.4)
+          }));
+        default:
+          return [];
+      }
+    }
+    
+    // Apply response filter
+    if (selectedResponse) {
+      switch (type) {
+        case 'intents':
+          // Filter intents related to the selected response
+          return intentData.filter(i => 
+            i.name.toLowerCase().includes(selectedResponse.toLowerCase())
+          );
+        case 'sentiment':
+          // Filter sentiment data related to the selected response
+          return sentimentData.filter(s => 
+            s.conversationId.toString().includes(selectedResponse.toLowerCase())
+          );
+        case 'kpi':
+          // Adjust KPI data based on selected response
+          return kpiData.map(kpi => ({
+            ...kpi,
+            value: kpi.value * (0.6 + Math.random() * 0.8),
+            trend: kpi.trend * (0.7 + Math.random() * 0.6)
+          }));
+        default:
+          return [];
+      }
+    }
+    
+    return [];
+  };
+  
+  // Reset all filters
+  const resetFilters = () => {
+    setSelectedIntent(null);
+    setSelectedResponse(null);
+  };
   
   // Handle filter changes (date)
   const handleFilterChange = (filter: string) => {
@@ -129,6 +214,12 @@ export const useDashboardData = (): DashboardData => {
     sentimentImprovement,
     summaryHtml,
     handleFilterChange,
-    barData
+    barData,
+    selectedIntent,
+    selectedResponse,
+    setSelectedIntent,
+    setSelectedResponse,
+    getFilteredData,
+    resetFilters
   };
 };
