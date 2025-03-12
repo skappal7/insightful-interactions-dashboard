@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				dashboard: {
+					positive: '#34D399',
+					negative: '#F87171',
+					neutral: '#FBBF24',
+					blue: '#60A5FA',
+					purple: '#A78BFA',
+					teal: '#5EEAD4',
+					pink: '#F472B6'
 				}
 			},
 			borderRadius: {
@@ -84,11 +94,38 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'fade-in-up': {
+					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'pulse-subtle': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' }
+				},
+				'scale-in': {
+					'0%': { transform: 'scale(0.95)', opacity: '0' },
+					'100%': { transform: 'scale(1)', opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'fade-in-up': 'fade-in-up 0.5s ease-out',
+				'pulse-subtle': 'pulse-subtle 2s infinite',
+				'scale-in': 'scale-in 0.3s ease-out'
+			},
+			boxShadow: {
+				'glass': '0 0 15px rgba(0, 0, 0, 0.05)',
+				'glass-sm': '0 0 10px rgba(0, 0, 0, 0.03)'
+			},
+			backgroundImage: {
+				'glass-gradient': 'linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8))'
 			}
 		}
 	},
