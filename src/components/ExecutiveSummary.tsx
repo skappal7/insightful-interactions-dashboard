@@ -14,7 +14,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ summaryHtml }) => {
       </CardHeader>
       <CardContent>
         <div 
-          className="text-sm leading-relaxed"
+          className="text-sm leading-relaxed prose prose-sm max-w-none"
           dangerouslySetInnerHTML={{ __html: summaryHtml }}
         />
       </CardContent>

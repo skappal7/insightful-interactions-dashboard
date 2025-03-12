@@ -1,5 +1,7 @@
 
 import React from 'react';
+import { Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const DashboardHeader: React.FC = () => {
   return (
@@ -9,11 +11,14 @@ const DashboardHeader: React.FC = () => {
         <p className="text-muted-foreground">
           Monitor AI performance metrics, sentiment analysis, and live agent escalations
         </p>
+        <div className="mt-2 px-3 py-1.5 bg-yellow-100 border border-yellow-300 rounded-md text-xs text-yellow-800">
+          Note: This dashboard is a wireframe for demonstration purposes only. The actual implementation may differ.
+        </div>
       </div>
       <div className="flex items-center gap-4">
         <img 
-          src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Power_bi_logo_black.svg" 
-          alt="Power BI Logo" 
+          src="https://humach.com/wp-content/uploads/2023/01/HuMach_logo-bold.png" 
+          alt="Humach Logo" 
           className="h-8"
         />
       </div>
