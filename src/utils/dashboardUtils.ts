@@ -17,9 +17,9 @@ export const getTrendIndicator = (trend: number): string => {
 // Get sentiment color
 export const getSentimentColor = (sentiment: 'positive' | 'neutral' | 'negative'): string => {
   switch (sentiment) {
-    case 'positive': return 'bg-dashboard-positive text-white';
-    case 'neutral': return 'bg-dashboard-neutral text-black';
-    case 'negative': return 'bg-dashboard-negative text-white';
+    case 'positive': return 'bg-[#34D399] text-white';
+    case 'neutral': return 'bg-[#FBBF24] text-black';
+    case 'negative': return 'bg-[#F87171] text-white';
     default: return '';
   }
 };
@@ -102,16 +102,26 @@ export const generateExecutiveSummary = (
   completionRate: number
 ): string => {
   const trends = kpiTrends.map(kpi => {
-    const trendDirection = kpi.trend > 0 ? 'increased' : 'decreased';
-    const trendClass = kpi.trend > 0 ? 'trend-positive' : 'trend-negative';
-    const trendSymbol = kpi.trend > 0 ? '▲' : '▼';
-    return `<span class="${trendClass}">${kpi.title} ${trendDirection} by ${Math.abs(kpi.trend).toFixed(1)}% ${trendSymbol}</span>`;
+    // For escalations, a decrease is positive (green), increase is negative (red)
+    if (kpi.title === 'Escalations') {
+      const trendDirection = kpi.trend > 0 ? 'increased' : 'decreased';
+      const trendClass = kpi.trend > 0 ? 'trend-negative' : 'trend-positive';
+      const trendSymbol = kpi.trend > 0 ? '▲' : '▼';
+      return `<span class="${trendClass}">${kpi.title} ${trendDirection} by ${Math.abs(kpi.trend).toFixed(1)}% ${trendSymbol}</span>`;
+    } else {
+      // For other metrics, increase is positive (green), decrease is negative (red)
+      const trendDirection = kpi.trend > 0 ? 'increased' : 'decreased';
+      const trendClass = kpi.trend > 0 ? 'trend-positive' : 'trend-negative';
+      const trendSymbol = kpi.trend > 0 ? '▲' : '▼';
+      return `<span class="${trendClass}">${kpi.title} ${trendDirection} by ${Math.abs(kpi.trend).toFixed(1)}% ${trendSymbol}</span>`;
+    }
   }).join('. ');
 
   const aiVsLive = sentimentImprovement.liveAgentImprovement > sentimentImprovement.aiImprovement
     ? `Live agents demonstrate <span class="trend-positive">higher effectiveness</span> at improving customer sentiment (${sentimentImprovement.liveAgentImprovement.toFixed(1)}%) compared to AI assistants (${sentimentImprovement.aiImprovement.toFixed(1)}%)`
     : `AI assistants show <span class="trend-positive">comparable effectiveness</span> to live agents at improving customer sentiment (${sentimentImprovement.aiImprovement.toFixed(1)}% vs ${sentimentImprovement.liveAgentImprovement.toFixed(1)}%)`;
 
+  // For escalations, a lower number is better
   const escalationAnalysis = totalEscalations > 250
     ? `Escalations remain <span class="trend-negative">above target</span> at ${totalEscalations}`
     : `Escalations are <span class="trend-positive">within target range</span> at ${totalEscalations}`;

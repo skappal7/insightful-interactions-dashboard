@@ -3,7 +3,9 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SentimentData } from '@/utils/mockData';
 import { getSentimentColor } from '@/utils/dashboardUtils';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 
 interface SentimentTrackerProps {
   data: SentimentData[];
@@ -78,22 +80,46 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
   
   const effectivenessData = calculateEffectiveness();
   
+  // Make sure we have data to display
+  const ensureData = (data: Array<{name: string, value: number, color: string}>) => {
+    if (data.every(item => item.value === 0)) {
+      return [
+        { name: 'No Data', value: 1, color: '#CBD5E1' }
+      ];
+    }
+    return data;
+  };
+
+  const safeStartDistribution = ensureData(startDistribution);
+  const safeMidDistribution = ensureData(midDistribution);
+  const safeEndDistribution = ensureData(endDistribution);
+  const safeMovementData = ensureData(movementData);
+  const safeEffectivenessData = ensureData(effectivenessData);
+  
   return (
     <Card className="dashboard-card col-span-full">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="text-base font-medium">Sentiment Analysis & Movement</CardTitle>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <InfoCircledIcon className="h-4 w-4 text-muted-foreground cursor-help" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="w-64">Analysis of customer sentiment throughout conversations and how it changes over time</p>
+          </TooltipContent>
+        </Tooltip>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
             <h3 className="text-sm font-medium mb-4 text-center">Sentiment Distribution Across Conversation Stages</h3>
-            <div className="grid grid-cols-3 gap-4 h-[240px]">
+            <div className="grid grid-cols-3 gap-4" style={{ height: "220px" }}>
               <div>
                 <h4 className="text-xs font-medium text-center mb-2">Start</h4>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={startDistribution}
+                      data={safeStartDistribution}
                       cx="50%"
                       cy="50%"
                       outerRadius={60}
@@ -101,11 +127,11 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                       labelLine={false}
                     >
-                      {startDistribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      {safeStartDistribution.map((entry, index) => (
+                        <Cell key={`cell-start-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <RechartsTooltip 
                       formatter={(value) => [`${value} conversations`, 'Count']}
                     />
                   </PieChart>
@@ -116,7 +142,7 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={midDistribution}
+                      data={safeMidDistribution}
                       cx="50%"
                       cy="50%"
                       outerRadius={60}
@@ -124,11 +150,11 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                       labelLine={false}
                     >
-                      {midDistribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      {safeMidDistribution.map((entry, index) => (
+                        <Cell key={`cell-mid-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <RechartsTooltip 
                       formatter={(value) => [`${value} conversations`, 'Count']}
                     />
                   </PieChart>
@@ -139,7 +165,7 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={endDistribution}
+                      data={safeEndDistribution}
                       cx="50%"
                       cy="50%"
                       outerRadius={60}
@@ -147,11 +173,11 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                       labelLine={false}
                     >
-                      {endDistribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      {safeEndDistribution.map((entry, index) => (
+                        <Cell key={`cell-end-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <RechartsTooltip 
                       formatter={(value) => [`${value} conversations`, 'Count']}
                     />
                   </PieChart>
@@ -160,15 +186,15 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
             </div>
             <div className="flex justify-center mt-4 space-x-4">
               <div className="flex items-center">
-                <span className="w-3 h-3 bg-dashboard-positive rounded-full mr-1"></span>
+                <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: "#34D399" }}></span>
                 <span className="text-xs">Positive</span>
               </div>
               <div className="flex items-center">
-                <span className="w-3 h-3 bg-dashboard-neutral rounded-full mr-1"></span>
+                <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: "#FBBF24" }}></span>
                 <span className="text-xs">Neutral</span>
               </div>
               <div className="flex items-center">
-                <span className="w-3 h-3 bg-dashboard-negative rounded-full mr-1"></span>
+                <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: "#F87171" }}></span>
                 <span className="text-xs">Negative</span>
               </div>
             </div>
@@ -176,13 +202,13 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
           
           <div>
             <h3 className="text-sm font-medium mb-4 text-center">Sentiment Movement & Agent Impact</h3>
-            <div className="grid grid-cols-2 gap-4 h-[240px]">
+            <div className="grid grid-cols-2 gap-4" style={{ height: "220px" }}>
               <div>
                 <h4 className="text-xs font-medium text-center mb-2">Sentiment Movement</h4>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={movementData}
+                      data={safeMovementData}
                       cx="50%"
                       cy="50%"
                       outerRadius={60}
@@ -190,11 +216,11 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                       labelLine={false}
                     >
-                      {movementData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      {safeMovementData.map((entry, index) => (
+                        <Cell key={`cell-movement-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <RechartsTooltip 
                       formatter={(value) => [`${value} conversations`, 'Count']}
                     />
                   </PieChart>
@@ -205,7 +231,7 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={effectivenessData}
+                      data={safeEffectivenessData}
                       cx="50%"
                       cy="50%"
                       outerRadius={60}
@@ -213,11 +239,11 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                       labelLine={false}
                     >
-                      {effectivenessData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      {safeEffectivenessData.map((entry, index) => (
+                        <Cell key={`cell-effective-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <RechartsTooltip 
                       formatter={(value) => [`${value} conversations`, 'Count']}
                     />
                   </PieChart>
@@ -226,11 +252,11 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
             </div>
             <div className="flex justify-center mt-4 space-x-4">
               <div className="flex items-center">
-                <span className="w-3 h-3 bg-dashboard-blue rounded-full mr-1"></span>
+                <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: "#60A5FA" }}></span>
                 <span className="text-xs">AI Assistant</span>
               </div>
               <div className="flex items-center">
-                <span className="w-3 h-3 bg-dashboard-purple rounded-full mr-1"></span>
+                <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: "#A78BFA" }}></span>
                 <span className="text-xs">Live Agent</span>
               </div>
             </div>
@@ -242,19 +268,19 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
             <span className="text-xs font-medium text-muted-foreground mb-2">Start Sentiment</span>
             <div className="flex space-x-2">
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('positive')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#34D399] text-white">
                   <span role="img" aria-label="Positive sentiment">😊</span>
                 </span>
                 <span className="text-xs mt-1">{startDistribution[0].value}</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('neutral')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FBBF24] text-black">
                   <span role="img" aria-label="Neutral sentiment">😐</span>
                 </span>
                 <span className="text-xs mt-1">{startDistribution[1].value}</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('negative')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F87171] text-white">
                   <span role="img" aria-label="Negative sentiment">😞</span>
                 </span>
                 <span className="text-xs mt-1">{startDistribution[2].value}</span>
@@ -266,19 +292,19 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
             <span className="text-xs font-medium text-muted-foreground mb-2">Mid Conversation</span>
             <div className="flex space-x-2">
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('positive')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#34D399] text-white">
                   <span role="img" aria-label="Positive sentiment">😊</span>
                 </span>
                 <span className="text-xs mt-1">{midDistribution[0].value}</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('neutral')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FBBF24] text-black">
                   <span role="img" aria-label="Neutral sentiment">😐</span>
                 </span>
                 <span className="text-xs mt-1">{midDistribution[1].value}</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('negative')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F87171] text-white">
                   <span role="img" aria-label="Negative sentiment">😞</span>
                 </span>
                 <span className="text-xs mt-1">{midDistribution[2].value}</span>
@@ -290,19 +316,19 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
             <span className="text-xs font-medium text-muted-foreground mb-2">End Sentiment</span>
             <div className="flex space-x-2">
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('positive')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#34D399] text-white">
                   <span role="img" aria-label="Positive sentiment">😊</span>
                 </span>
                 <span className="text-xs mt-1">{endDistribution[0].value}</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('neutral')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FBBF24] text-black">
                   <span role="img" aria-label="Neutral sentiment">😐</span>
                 </span>
                 <span className="text-xs mt-1">{endDistribution[1].value}</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className={`w-10 h-10 flex items-center justify-center rounded-full ${getSentimentColor('negative')}`}>
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F87171] text-white">
                   <span role="img" aria-label="Negative sentiment">😞</span>
                 </span>
                 <span className="text-xs mt-1">{endDistribution[2].value}</span>
