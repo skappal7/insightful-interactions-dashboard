@@ -13,7 +13,7 @@ interface TrendLineProps {
 const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
-      <Card className="p-2 shadow-lg border text-sm bg-white dark:bg-slate-800">
+      <Card className="p-2 shadow-lg border text-sm bg-white dark:bg-slate-800 z-[100]">
         <div className="font-medium text-black dark:text-white">{`Value: ${Math.round(payload[0].value as number)}`}</div>
         <div className="text-muted-foreground text-xs">{`Date: ${payload[0].payload.date}`}</div>
       </Card>

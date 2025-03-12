@@ -88,7 +88,12 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
                 <TooltipTrigger asChild>
                   <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent 
+                  side="top"
+                  className="bg-white dark:bg-slate-800 p-2 rounded-md shadow-lg z-[100]"
+                  avoidCollisions={true}
+                  collisionPadding={16}
+                >
                   <p className="w-64">Overall sentiment distribution across AI-handled conversations</p>
                 </TooltipContent>
               </UITooltip>
@@ -123,7 +128,7 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip wrapperStyle={{ zIndex: 1000 }} />
                 <Legend />
                 <Bar dataKey="ai" fill="#60A5FA" name="AI Handled" />
               </BarChart>

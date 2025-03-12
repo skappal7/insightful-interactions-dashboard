@@ -194,3 +194,15 @@ h1, h2, h3, h4, h5, h6 {
 .loading-shimmer {
   @apply animate-pulse bg-muted rounded;
 }
+
+/* Tooltip positioning fix */
+.radix-tooltip-content {
+  z-index: 100 !important;
+  max-width: 250px;
+  position: relative;
+}
+
+/* Make sure all tooltips are visible */
+[data-radix-popper-content-wrapper] {
+  z-index: 100 !important;
+}

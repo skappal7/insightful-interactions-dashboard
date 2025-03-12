@@ -60,7 +60,7 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
     <Card className="dashboard-card overflow-hidden transition-all duration-300">
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-1">
-          <div className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+          <div className="text-sm font-medium text-muted-foreground flex items-center gap-1 relative">
             {title}
             {description && (
               <TooltipProvider>
@@ -68,7 +68,13 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
                   <TooltipTrigger asChild>
                     <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent side="right" className="max-w-xs bg-white dark:bg-slate-800 shadow-lg border rounded-lg p-2 z-50">
+                  <TooltipContent 
+                    side="top" 
+                    align="center" 
+                    className="max-w-xs bg-white dark:bg-slate-800 shadow-xl border rounded-lg p-3 z-[100]"
+                    avoidCollisions={true}
+                    collisionPadding={16}
+                  >
                     <p className="text-xs">{description}</p>
                   </TooltipContent>
                 </Tooltip>
