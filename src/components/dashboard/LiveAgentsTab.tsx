@@ -16,10 +16,6 @@ interface LiveAgentsTabProps {
   kpiDescriptions: Record<string, string>;
   barData: Array<{name: string, ai: number, agent: number}>;
   sentimentData: SentimentData[];
-  selectedIntent: string | null;
-  selectedResponse: string | null;
-  onSelectIntent: (intent: string | null) => void;
-  onSelectResponse: (response: string | null) => void;
 }
 
 const LiveAgentsTab: React.FC<LiveAgentsTabProps> = ({
@@ -29,11 +25,7 @@ const LiveAgentsTab: React.FC<LiveAgentsTabProps> = ({
   topIncompleteIntents,
   kpiDescriptions,
   barData,
-  sentimentData,
-  selectedIntent,
-  selectedResponse,
-  onSelectIntent,
-  onSelectResponse
+  sentimentData
 }) => {
   // List of KPIs we want to show for Live Agents
   // We'll map from existing KPIs where possible and add mock data for new ones
@@ -144,12 +136,8 @@ const LiveAgentsTab: React.FC<LiveAgentsTabProps> = ({
               </TableHeader>
               <TableBody>
                 {longCallTypes.map((call, index) => (
-                  <TableRow 
-                    key={index}
-                    className={selectedIntent === call.type ? 'bg-primary/10' : ''}
-                    onClick={() => onSelectIntent(selectedIntent === call.type ? null : call.type)}
-                  >
-                    <TableCell className="font-medium cursor-pointer">{call.type}</TableCell>
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">{call.type}</TableCell>
                     <TableCell>{call.avgDuration}</TableCell>
                     <TableCell>{call.count}</TableCell>
                   </TableRow>
@@ -172,12 +160,8 @@ const LiveAgentsTab: React.FC<LiveAgentsTabProps> = ({
               </TableHeader>
               <TableBody>
                 {shortCallTypes.map((call, index) => (
-                  <TableRow 
-                    key={index} 
-                    className={selectedIntent === call.type ? 'bg-primary/10' : ''}
-                    onClick={() => onSelectIntent(selectedIntent === call.type ? null : call.type)}
-                  >
-                    <TableCell className="font-medium cursor-pointer">{call.type}</TableCell>
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">{call.type}</TableCell>
                     <TableCell>{call.avgDuration}</TableCell>
                     <TableCell>{call.count}</TableCell>
                   </TableRow>
@@ -203,12 +187,8 @@ const LiveAgentsTab: React.FC<LiveAgentsTabProps> = ({
               </TableHeader>
               <TableBody>
                 {escalatedCalls.map((call, index) => (
-                  <TableRow 
-                    key={index}
-                    className={selectedIntent === call.type ? 'bg-primary/10' : ''}
-                    onClick={() => onSelectIntent(selectedIntent === call.type ? null : call.type)}
-                  >
-                    <TableCell className="font-medium cursor-pointer">{call.type}</TableCell>
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">{call.type}</TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs ${getSentimentColorClass(call.initialSentiment)}`}>
                         {call.initialSentiment}

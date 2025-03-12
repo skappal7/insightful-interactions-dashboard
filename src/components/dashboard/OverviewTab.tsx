@@ -12,10 +12,6 @@ interface OverviewTabProps {
   trendData: TrendPoint[];
   summaryHtml: string;
   kpiDescriptions: Record<string, string>;
-  selectedIntent: string | null;
-  selectedResponse: string | null;
-  onSelectIntent: (intent: string | null) => void;
-  onSelectResponse: (response: string | null) => void;
 }
 
 const OverviewTab: React.FC<OverviewTabProps> = ({
@@ -24,11 +20,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   topIncompleteIntents,
   trendData,
   summaryHtml,
-  kpiDescriptions,
-  selectedIntent,
-  selectedResponse,
-  onSelectIntent,
-  onSelectResponse
+  kpiDescriptions
 }) => {
   return (
     <div className="space-y-6 animate-fade-in">
@@ -66,14 +58,10 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
         <IntentTable 
           data={topCompletedIntents} 
           title="Top Completed Intents" 
-          selectedIntent={selectedIntent}
-          onSelectIntent={onSelectIntent}
         />
         <IntentTable 
           data={topIncompleteIntents} 
           title="Top Incomplete Intents" 
-          selectedIntent={selectedIntent}
-          onSelectIntent={onSelectIntent}
         />
       </div>
       

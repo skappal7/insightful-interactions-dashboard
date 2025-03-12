@@ -3,33 +3,17 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { IntentData } from '@/utils/mockData';
 import { getCompletionColor } from '@/utils/dashboardUtils';
-import { X } from 'lucide-react';
 
 interface IntentTableProps {
   data: IntentData[];
   title: string;
-  selectedIntent: string | null;
-  onSelectIntent: (intent: string | null) => void;
 }
 
-const IntentTable: React.FC<IntentTableProps> = ({ 
-  data, 
-  title, 
-  selectedIntent, 
-  onSelectIntent 
-}) => {
+const IntentTable: React.FC<IntentTableProps> = ({ data, title }) => {
   return (
     <Card className="dashboard-card">
-      <CardHeader className="pb-2 flex flex-row items-center justify-between">
+      <CardHeader className="pb-2">
         <CardTitle className="text-base font-medium">{title}</CardTitle>
-        {selectedIntent && (
-          <button
-            onClick={() => onSelectIntent(null)}
-            className="text-xs flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <X className="h-3.5 w-3.5" /> Clear filter
-          </button>
-        )}
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
@@ -45,11 +29,7 @@ const IntentTable: React.FC<IntentTableProps> = ({
             </thead>
             <tbody>
               {data.map((intent) => (
-                <tr 
-                  key={intent.name} 
-                  className={`text-sm hover:bg-muted/50 transition-colors cursor-pointer ${selectedIntent === intent.name ? 'bg-primary/10' : ''}`}
-                  onClick={() => onSelectIntent(selectedIntent === intent.name ? null : intent.name)}
-                >
+                <tr key={intent.name} className="text-sm hover:bg-muted/50 transition-colors">
                   <td className="font-medium">{intent.name}</td>
                   <td className="text-right">{Math.round(intent.total)}</td>
                   <td className="text-right">{Math.round(intent.aiCompleted)}</td>
