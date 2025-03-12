@@ -50,7 +50,13 @@ const Index = () => {
   // Filter data based on intent and agent selections
   const filteredIntentData = intentData.filter(intent => {
     if (selectedIntent === 'all-intents') return true;
-    return intent.category === selectedIntent;
+    
+    // If intent is related to 'account', 'billing', or 'support', check if the name contains these keywords
+    if (selectedIntent === 'account') return intent.name.toLowerCase().includes('account');
+    if (selectedIntent === 'billing') return intent.name.toLowerCase().includes('billing');
+    if (selectedIntent === 'support') return intent.name.toLowerCase().includes('support');
+    
+    return true;
   });
   
   const filteredResponseData = responseData.filter(response => {
