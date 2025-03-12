@@ -24,10 +24,30 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
   kpiDescriptions,
   barData
 }) => {
+  // Filter KPIs for Digital Agent section
+  const digitalAgentKPIs = kpiData.filter(kpi => 
+    ['Total Conversations', 'Total Requests', 'Recognition %', 'Completion %', 'Escalations'].includes(kpi.title)
+  );
+  
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-6">
-        {kpiData.slice(0, 3).map((kpi) => (
+      {/* Two rows of KPI widgets, 3 per row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {digitalAgentKPIs.slice(0, 3).map((kpi) => (
+          <KPIWidget
+            key={kpi.title}
+            title={kpi.title}
+            value={kpi.value}
+            trend={kpi.trend}
+            unit={kpi.unit}
+            trendData={trendData}
+            description={kpiDescriptions[kpi.title as keyof typeof kpiDescriptions]}
+          />
+        ))}
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {digitalAgentKPIs.slice(3).map((kpi) => (
           <KPIWidget
             key={kpi.title}
             title={kpi.title}

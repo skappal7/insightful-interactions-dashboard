@@ -109,6 +109,7 @@ const Index = () => {
             topIncompleteIntents={topIncompleteIntents}
             kpiDescriptions={kpiDescriptions}
             barData={barData}
+            sentimentData={sentimentData}
           />
         </TabsContent>
         
