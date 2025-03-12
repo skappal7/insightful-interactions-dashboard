@@ -1,11 +1,14 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import KPIWidget from '@/components/KPIWidget';
 import ResponseTable from '@/components/ResponseTable';
 import IntentTable from '@/components/IntentTable';
-import { KPIData, IntentData, ResponseData, TrendPoint } from '@/utils/mockData';
+import { KPIData, IntentData, ResponseData, TrendPoint, SentimentData } from '@/utils/mockData';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
+import { Info } from 'lucide-react';
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DigitalAgentTabProps {
   kpiData: KPIData[];
@@ -28,6 +31,23 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
   const digitalAgentKPIs = kpiData.filter(kpi => 
     ['Total Conversations', 'Total Requests', 'Recognition %', 'Completion %', 'Escalations'].includes(kpi.title)
   );
+  
+  // Mock sentiment data for Digital Agent
+  const sentimentDistribution = [
+    { name: 'Positive', value: 65, color: '#34D399' },
+    { name: 'Neutral', value: 25, color: '#FBBF24' },
+    { name: 'Negative', value: 10, color: '#F87171' }
+  ];
+  
+  // Helper to get emoji based on sentiment
+  const getSentimentEmoji = (sentiment: string) => {
+    switch (sentiment.toLowerCase()) {
+      case 'positive': return '😊';
+      case 'neutral': return '😐';
+      case 'negative': return '😞';
+      default: return '❓';
+    }
+  };
   
   return (
     <>
@@ -58,6 +78,40 @@ const DigitalAgentTab: React.FC<DigitalAgentTabProps> = ({
             description={kpiDescriptions[kpi.title as keyof typeof kpiDescriptions]}
           />
         ))}
+        
+        {/* Overall Sentiment Widget */}
+        <Card className="dashboard-card overflow-hidden transition-all duration-300">
+          <CardHeader className="pb-2 flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium">Overall Sentiment</CardTitle>
+            <TooltipProvider>
+              <UITooltip>
+                <TooltipTrigger asChild>
+                  <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="w-64">Overall sentiment distribution across AI-handled conversations</p>
+                </TooltipContent>
+              </UITooltip>
+            </TooltipProvider>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="flex justify-center items-center h-16">
+              {sentimentDistribution.map((item) => (
+                <div key={item.name} className="flex flex-col items-center mx-2">
+                  <div 
+                    className="flex items-center justify-center w-10 h-10 rounded-full"
+                    style={{ backgroundColor: `${item.color}20`, color: item.color }}
+                  >
+                    <span role="img" aria-label={`${item.name} sentiment`}>
+                      {getSentimentEmoji(item.name)}
+                    </span>
+                  </div>
+                  <div className="text-xs mt-1">{item.value}%</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

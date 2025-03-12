@@ -24,8 +24,24 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 }) => {
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-        {kpiData.map((kpi) => (
+      {/* First row of KPI widgets, 3 per row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {kpiData.slice(0, 3).map((kpi) => (
+          <KPIWidget
+            key={kpi.title}
+            title={kpi.title}
+            value={kpi.value}
+            trend={kpi.trend}
+            unit={kpi.unit}
+            trendData={trendData}
+            description={kpiDescriptions[kpi.title as keyof typeof kpiDescriptions]}
+          />
+        ))}
+      </div>
+      
+      {/* Second row of KPI widgets, 3 per row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {kpiData.slice(3, 6).map((kpi) => (
           <KPIWidget
             key={kpi.title}
             title={kpi.title}
