@@ -73,7 +73,7 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
               <ArrowDown className={`${trendColor} mr-1 h-3 w-3`} />
             ) : null}
             <span className={trendColor}>
-              {Math.round(trendAbs)}% {isPositiveTrend ? 'improvement' : (trend !== 0 ? 'decline' : 'no change')}
+              {Math.round(trendAbs)}%
             </span>
           </div>
         </div>
