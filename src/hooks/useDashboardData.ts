@@ -24,8 +24,6 @@ interface DashboardData {
   trendData: TrendPoint[];
   dateFilters: DateFilter[];
   selectedFilter: string;
-  selectedIntent: string;
-  selectedAgent: string;
   topCompletedIntents: IntentData[];
   topIncompleteIntents: IntentData[];
   aiResponses: ResponseData[];
@@ -33,9 +31,8 @@ interface DashboardData {
   sentimentImprovement: { aiImprovement: number; liveAgentImprovement: number };
   summaryHtml: string;
   handleFilterChange: (filter: string) => void;
-  handleIntentChange: (intent: string) => void;
-  handleAgentChange: (agent: string) => void;
   barData: Array<{name: string, ai: number, agent: number}>;
+  journeyData?: any;
 }
 
 export const useDashboardData = (): DashboardData => {
@@ -47,33 +44,12 @@ export const useDashboardData = (): DashboardData => {
   const [trendData, setTrendData] = useState(generateTrendData());
   const [dateFilters, setDateFilters] = useState(generateDateFilters());
   const [selectedFilter, setSelectedFilter] = useState('Last 7 Days');
-  const [selectedIntent, setSelectedIntent] = useState('all-intents');
-  const [selectedAgent, setSelectedAgent] = useState('all-agents');
-  
-  // Filter data based on intent and agent selections
-  const filteredIntentData = intentData.filter(intent => {
-    if (selectedIntent === 'all-intents') return true;
-    
-    // If intent is related to 'account', 'billing', or 'support', check if the name contains these keywords
-    if (selectedIntent === 'account') return intent.name.toLowerCase().includes('account');
-    if (selectedIntent === 'billing') return intent.name.toLowerCase().includes('billing');
-    if (selectedIntent === 'support') return intent.name.toLowerCase().includes('support');
-    
-    return true;
-  });
-  
-  const filteredResponseData = responseData.filter(response => {
-    if (selectedAgent === 'all-agents') return true;
-    if (selectedAgent === 'ai-only') return response.aiHandled;
-    if (selectedAgent === 'live-only') return !response.aiHandled;
-    return true;
-  });
   
   // Derived data
-  const topCompletedIntents = getTopIntents(filteredIntentData, true);
-  const topIncompleteIntents = getTopIntents(filteredIntentData, false);
-  const aiResponses = getTopResponses(filteredResponseData, true);
-  const liveAgentResponses = getTopResponses(filteredResponseData, false);
+  const topCompletedIntents = getTopIntents(intentData, true);
+  const topIncompleteIntents = getTopIntents(intentData, false);
+  const aiResponses = getTopResponses(responseData, true);
+  const liveAgentResponses = getTopResponses(responseData, false);
   const sentimentImprovement = calculateSentimentImprovement(sentimentData);
   
   // Executive summary
@@ -85,7 +61,7 @@ export const useDashboardData = (): DashboardData => {
     kpiData.find(kpi => kpi.title === 'Completion %')?.value || 0
   );
   
-  // Handle filter changes (date, intent, and agent)
+  // Handle filter changes (date)
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
     
@@ -122,18 +98,6 @@ export const useDashboardData = (): DashboardData => {
       setSentimentData(filteredSentimentData);
     }, 300);
   };
-  
-  // Handle intent filter change
-  const handleIntentChange = (intent: string) => {
-    setSelectedIntent(intent);
-    console.log("Intent changed to:", intent);
-  };
-  
-  // Handle agent filter change
-  const handleAgentChange = (agent: string) => {
-    setSelectedAgent(agent);
-    console.log("Agent changed to:", agent);
-  };
 
   // Generate bar data for charts
   const generateBarData = () => {
@@ -158,8 +122,6 @@ export const useDashboardData = (): DashboardData => {
     trendData,
     dateFilters,
     selectedFilter,
-    selectedIntent,
-    selectedAgent,
     topCompletedIntents,
     topIncompleteIntents,
     aiResponses,
@@ -167,8 +129,6 @@ export const useDashboardData = (): DashboardData => {
     sentimentImprovement,
     summaryHtml,
     handleFilterChange,
-    handleIntentChange,
-    handleAgentChange,
     barData
   };
 };

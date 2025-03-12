@@ -24,11 +24,16 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
   trendData = [],
   description = ''
 }) => {
-  // For escalation metrics, a decrease (negative trend) is actually positive
-  const isEscalationMetric = title.toLowerCase().includes('escalation');
-  const isPositiveTrend = isEscalationMetric ? trend < 0 : trend > 0;
+  // For metrics where a decrease is actually positive
+  const isInverseMetric = title.toLowerCase().includes('escalation') || 
+                         title.toLowerCase().includes('repeat') || 
+                         title.toLowerCase().includes('aht') || 
+                         title.toLowerCase().includes('transfers') ||
+                         (title.toLowerCase().includes('calls') && title.toLowerCase().includes('short'));
   
-  const trendColor = isEscalationMetric 
+  const isPositiveTrend = isInverseMetric ? trend < 0 : trend > 0;
+  
+  const trendColor = isInverseMetric 
     ? (trend < 0 ? 'text-dashboard-positive' : trend > 0 ? 'text-dashboard-negative' : 'text-dashboard-neutral')
     : getTrendIndicator(trend);
     
@@ -84,12 +89,12 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
                 {isPositiveTrend ? (
                   <>
                     <ArrowUp className="h-3 w-3 mr-1" />
-                    {Math.round(trendAbs)}% {isEscalationMetric ? 'reduction' : 'increase'}
+                    {Math.round(trendAbs)}% {isInverseMetric ? 'reduction' : 'increase'}
                   </>
                 ) : trend !== 0 ? (
                   <>
                     <ArrowDown className="h-3 w-3 mr-1" />
-                    {Math.round(trendAbs)}% {isEscalationMetric ? 'increase' : 'decrease'}
+                    {Math.round(trendAbs)}% {isInverseMetric ? 'increase' : 'decrease'}
                   </>
                 ) : (
                   'No change'

@@ -1,112 +1,38 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import SentimentTracker from '@/components/SentimentTracker';
 import { SentimentData } from '@/utils/mockData';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
-import { CalendarIcon, FilterIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import SentimentMovement from '@/components/sentiment/SentimentMovement';
 
 interface SentimentTabProps {
   sentimentData: SentimentData[];
 }
 
 const SentimentTab: React.FC<SentimentTabProps> = ({ sentimentData }) => {
-  // Filter states
-  const [timeRange, setTimeRange] = useState<string>('week');
-  const [intent, setIntent] = useState<string>('billing');
-  const [agentType, setAgentType] = useState<string>('ai-only');
+  // Prepare sentiment movement data
+  const movementData = [
+    { name: 'Improved', value: 65, color: '#34D399' },
+    { name: 'Stayed Same', value: 22, color: '#94A3B8' },
+    { name: 'Worsened', value: 13, color: '#F87171' }
+  ];
+  
+  const effectivenessData = [
+    { name: 'AI Improved', value: 62, color: '#60A5FA' },
+    { name: 'Live Agent Improved', value: 78, color: '#A78BFA' }
+  ];
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-card rounded-lg border p-4 mb-6 animate-fade-in">
-        <div className="flex items-center gap-2">
-          <CalendarIcon className="h-5 w-5 text-muted-foreground" />
-          <span className="font-medium text-sm">Time Period:</span>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant={timeRange === 'today' ? "default" : "outline"}
-              size="sm"
-              onClick={() => setTimeRange('today')}
-              className="h-8 transition-all duration-200"
-            >
-              Today
-            </Button>
-            <Button
-              variant={timeRange === 'yesterday' ? "default" : "outline"}
-              size="sm"
-              onClick={() => setTimeRange('yesterday')}
-              className="h-8 transition-all duration-200"
-            >
-              Yesterday
-            </Button>
-            <Button
-              variant={timeRange === 'week' ? "default" : "outline"}
-              size="sm"
-              onClick={() => setTimeRange('week')}
-              className="h-8 transition-all duration-200"
-            >
-              Last 7 Days
-            </Button>
-            <Button
-              variant={timeRange === 'month' ? "default" : "outline"}
-              size="sm"
-              onClick={() => setTimeRange('month')}
-              className="h-8 transition-all duration-200"
-            >
-              Last 30 Days
-            </Button>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <FilterIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Intent:</span>
-            <Select 
-              value={intent} 
-              onValueChange={setIntent}
-            >
-              <SelectTrigger className="w-[180px] h-8">
-                <SelectValue placeholder="Filter by Intent" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="account">Account Intents</SelectItem>
-                <SelectItem value="billing">Billing Intents</SelectItem>
-                <SelectItem value="support">Support Intents</SelectItem>
-                <SelectItem value="technical">Technical Issues</SelectItem>
-                <SelectItem value="product">Product Inquiries</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <FilterIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Agent:</span>
-            <Select 
-              value={agentType} 
-              onValueChange={setAgentType}
-            >
-              <SelectTrigger className="w-[180px] h-8">
-                <SelectValue placeholder="Filter by Agent" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ai-only">AI Only</SelectItem>
-                <SelectItem value="live-only">Live Agents Only</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
-      
       <SentimentTracker data={sentimentData} />
+      
+      <div className="mt-6">
+        <SentimentMovement 
+          movementData={movementData}
+          effectivenessData={effectivenessData}
+        />
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <Card className="dashboard-card overflow-hidden transition-all duration-300">

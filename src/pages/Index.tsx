@@ -3,13 +3,14 @@ import React, { useEffect } from 'react';
 import DashboardHeader from '@/components/DashboardHeader';
 import FilterBar from '@/components/FilterBar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LayoutDashboard, Users, Bot, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Users, Bot, MessageSquare, Map } from 'lucide-react';
 
 // Import the refactored tab components
 import OverviewTab from '@/components/dashboard/OverviewTab';
 import DigitalAgentTab from '@/components/dashboard/DigitalAgentTab';
 import LiveAgentsTab from '@/components/dashboard/LiveAgentsTab';
 import SentimentTab from '@/components/dashboard/SentimentTab';
+import CustomerJourneyTab from '@/components/dashboard/CustomerJourneyTab';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { kpiDescriptions } from '@/constants/dashboardConstants';
 
@@ -18,8 +19,6 @@ const Index = () => {
     kpiData,
     dateFilters,
     selectedFilter,
-    selectedIntent,
-    selectedAgent,
     topCompletedIntents,
     topIncompleteIntents,
     trendData,
@@ -28,9 +27,7 @@ const Index = () => {
     liveAgentResponses,
     sentimentData,
     barData,
-    handleFilterChange,
-    handleIntentChange,
-    handleAgentChange
+    handleFilterChange
   } = useDashboardData();
   
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -53,10 +50,6 @@ const Index = () => {
         dateFilters={dateFilters}
         selectedFilter={selectedFilter}
         onFilterChange={handleFilterChange}
-        selectedIntent={selectedIntent}
-        onIntentChange={handleIntentChange}
-        selectedAgent={selectedAgent}
-        onAgentChange={handleAgentChange}
       />
       
       <Tabs defaultValue="overview" className="w-full" onValueChange={setActiveTab}>
@@ -77,6 +70,10 @@ const Index = () => {
             <MessageSquare className="h-4 w-4" />
             <span>Sentiment Analysis</span>
           </TabsTrigger>
+          <TabsTrigger value="journey" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+            <Map className="h-4 w-4" />
+            <span>Customer Journey</span>
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview" className="mt-0">
@@ -87,8 +84,6 @@ const Index = () => {
             trendData={trendData}
             summaryHtml={summaryHtml}
             kpiDescriptions={kpiDescriptions}
-            selectedIntent={selectedIntent}
-            onIntentChange={handleIntentChange}
           />
         </TabsContent>
         
@@ -118,6 +113,14 @@ const Index = () => {
         <TabsContent value="sentiment" className="mt-0">
           <SentimentTab 
             sentimentData={sentimentData}
+          />
+        </TabsContent>
+        
+        <TabsContent value="journey" className="mt-0">
+          <CustomerJourneyTab
+            kpiData={kpiData}
+            sentimentData={sentimentData}
+            topCompletedIntents={topCompletedIntents}
           />
         </TabsContent>
       </Tabs>
