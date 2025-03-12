@@ -41,7 +41,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
               sentiment: 'neutral',
               time: '10:32 AM',
               duration: '0.4s',
-              message: 'I apologize for the inconvenience. I'd be happy to help you with your account access issue. We do have some reports of service disruption. Let me check the status for you.'
+              message: 'I apologize for the inconvenience. I\'d be happy to help you with your account access issue. We do have some reports of service disruption. Let me check the status for you.'
             }
           },
           {
@@ -52,7 +52,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
               sentiment: 'neutral',
               time: '10:33 AM',
               duration: '1.2s',
-              message: 'I can confirm that we're experiencing a technical issue affecting some accounts. Our technical team is aware and working to resolve it as quickly as possible.'
+              message: 'I can confirm that we\'re experiencing a technical issue affecting some accounts. Our technical team is aware and working to resolve it as quickly as possible.'
             }
           },
           {
@@ -62,7 +62,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
             data: {
               sentiment: 'negative',
               time: '10:34 AM',
-              message: 'That's not good enough. I need to make this payment today or I'll be charged a late fee. Can you help me make the payment another way?'
+              message: 'That\'s not good enough. I need to make this payment today or I\'ll be charged a late fee. Can you help me make the payment another way?'
             }
           },
           {
@@ -83,7 +83,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
             data: {
               sentiment: 'neutral',
               time: '10:36 AM',
-              message: 'I don't have the app. Can I just speak to someone to make the payment now?'
+              message: 'I don\'t have the app. Can I just speak to someone to make the payment now?'
             }
           },
           {
@@ -94,7 +94,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
               sentiment: 'positive',
               time: '10:37 AM',
               duration: '0.8s',
-              message: 'Of course. I'll connect you with a payment specialist who can process your payment over the phone. Please hold while I transfer you.'
+              message: 'Of course. I\'ll connect you with a payment specialist who can process your payment over the phone. Please hold while I transfer you.'
             },
             children: [
               {
@@ -112,7 +112,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
                     data: {
                       sentiment: 'positive',
                       time: '10:39 AM',
-                      message: 'Hello, this is Sarah from customer support. I understand you need to make a payment today. I'd be happy to help you with that right now.'
+                      message: 'Hello, this is Sarah from customer support. I understand you need to make a payment today. I\'d be happy to help you with that right now.'
                     }
                   },
                   {
@@ -143,7 +143,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
                     data: {
                       sentiment: 'positive',
                       time: '10:46 AM',
-                      message: 'Great news! Your payment has been successfully processed. You'll receive a confirmation email shortly. Is there anything else I can help you with today?'
+                      message: 'Great news! Your payment has been successfully processed. You\'ll receive a confirmation email shortly. Is there anything else I can help you with today?'
                     }
                   },
                   {
@@ -153,7 +153,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
                     data: {
                       sentiment: 'positive',
                       time: '10:47 AM',
-                      message: 'No, that's all I needed. Thank you for your help.'
+                      message: 'No, that\'s all I needed. Thank you for your help.'
                     }
                   },
                   {
@@ -163,7 +163,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
                     data: {
                       sentiment: 'positive',
                       time: '10:48 AM',
-                      message: 'You're welcome. Thank you for your patience with our technical issues today. Have a great day!'
+                      message: 'You\'re welcome. Thank you for your patience with our technical issues today. Have a great day!'
                     }
                   }
                 ]
@@ -200,7 +200,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
               sentiment: 'neutral',
               time: '11:15 AM',
               duration: '0.3s',
-              message: 'I'll be happy to help you check your account balance. For your security, I'll need to verify your identity. Can you please provide your account number or username?'
+              message: 'I\'ll be happy to help you check your account balance. For your security, I\'ll need to verify your identity. Can you please provide your account number or username?'
             }
           },
           {
@@ -263,7 +263,7 @@ export const generateCustomerPathwayTreeData = (): TreeNode[] => [
               sentiment: 'positive',
               time: '11:18 AM',
               duration: '0.4s',
-              message: 'You're welcome! Thank you for using our service. Have a great day!'
+              message: 'You\'re welcome! Thank you for using our service. Have a great day!'
             }
           }
         ]
