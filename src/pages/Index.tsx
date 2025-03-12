@@ -1,136 +1,39 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import DashboardHeader from '@/components/DashboardHeader';
 import FilterBar from '@/components/FilterBar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LayoutDashboard, Users, Bot, MessageSquare } from 'lucide-react';
-import { 
-  generateKPIData, 
-  generateIntentData, 
-  generateResponseData, 
-  generateSentimentData,
-  generateTrendData,
-  generateDateFilters,
-} from '@/utils/mockData';
-import { 
-  getTopIntents, 
-  getTopResponses, 
-  calculateSentimentImprovement,
-  generateExecutiveSummary
-} from '@/utils/dashboardUtils';
 
 // Import the refactored tab components
 import OverviewTab from '@/components/dashboard/OverviewTab';
 import DigitalAgentTab from '@/components/dashboard/DigitalAgentTab';
 import LiveAgentsTab from '@/components/dashboard/LiveAgentsTab';
 import SentimentTab from '@/components/dashboard/SentimentTab';
-
-const kpiDescriptions = {
-  'Total Conversations': 'The total number of conversations between customers and AI or live agents',
-  'Unique Users': 'The number of distinct users who initiated conversations',
-  'Total Requests': 'The total number of individual requests made across all conversations',
-  'Recognition %': 'Percentage of user intents that were correctly recognized by the AI',
-  'Completion %': 'Percentage of requests that were successfully completed without escalation',
-  'Escalations': 'Number of conversations that were escalated to live agents'
-};
+import { useDashboardData } from '@/hooks/useDashboardData';
+import { kpiDescriptions } from '@/constants/dashboardConstants';
 
 const Index = () => {
-  // Initialize state with mock data
-  const [kpiData, setKpiData] = useState(generateKPIData());
-  const [intentData, setIntentData] = useState(generateIntentData());
-  const [responseData, setResponseData] = useState(generateResponseData());
-  const [sentimentData, setSentimentData] = useState(generateSentimentData());
-  const [trendData, setTrendData] = useState(generateTrendData());
-  const [dateFilters, setDateFilters] = useState(generateDateFilters());
-  const [selectedFilter, setSelectedFilter] = useState('Last 7 Days');
-  const [selectedIntent, setSelectedIntent] = useState('all-intents');
-  const [selectedAgent, setSelectedAgent] = useState('all-agents');
-  const [activeTab, setActiveTab] = useState('overview');
+  const {
+    kpiData,
+    dateFilters,
+    selectedFilter,
+    selectedIntent,
+    selectedAgent,
+    topCompletedIntents,
+    topIncompleteIntents,
+    trendData,
+    summaryHtml,
+    aiResponses,
+    liveAgentResponses,
+    sentimentData,
+    barData,
+    handleFilterChange,
+    handleIntentChange,
+    handleAgentChange
+  } = useDashboardData();
   
-  // Filter data based on intent and agent selections
-  const filteredIntentData = intentData.filter(intent => {
-    if (selectedIntent === 'all-intents') return true;
-    
-    // If intent is related to 'account', 'billing', or 'support', check if the name contains these keywords
-    if (selectedIntent === 'account') return intent.name.toLowerCase().includes('account');
-    if (selectedIntent === 'billing') return intent.name.toLowerCase().includes('billing');
-    if (selectedIntent === 'support') return intent.name.toLowerCase().includes('support');
-    
-    return true;
-  });
-  
-  const filteredResponseData = responseData.filter(response => {
-    if (selectedAgent === 'all-agents') return true;
-    if (selectedAgent === 'ai-only') return response.aiHandled;
-    if (selectedAgent === 'live-only') return !response.aiHandled;
-    return true;
-  });
-  
-  // Derived data
-  const topCompletedIntents = getTopIntents(filteredIntentData, true);
-  const topIncompleteIntents = getTopIntents(filteredIntentData, false);
-  const aiResponses = getTopResponses(filteredResponseData, true);
-  const liveAgentResponses = getTopResponses(filteredResponseData, false);
-  const sentimentImprovement = calculateSentimentImprovement(sentimentData);
-  
-  // Executive summary
-  const summaryHtml = generateExecutiveSummary(
-    kpiData.map(kpi => ({ title: kpi.title, trend: kpi.trend })),
-    sentimentImprovement,
-    kpiData.find(kpi => kpi.title === 'Escalations')?.value || 0,
-    kpiData.find(kpi => kpi.title === 'Recognition %')?.value || 0,
-    kpiData.find(kpi => kpi.title === 'Completion %')?.value || 0
-  );
-  
-  // Handle filter changes (date, intent, and agent)
-  const handleFilterChange = (filter: string) => {
-    setSelectedFilter(filter);
-    
-    // Simulate data changes when filter changes
-    setTimeout(() => {
-      // Create slightly different KPI data
-      const newKpiData = generateKPIData().map(kpi => ({
-        ...kpi,
-        value: kpi.value * (0.9 + Math.random() * 0.2),
-        trend: kpi.trend * (0.8 + Math.random() * 0.4),
-      }));
-      
-      // Create slightly different intent data
-      const newIntentData = generateIntentData().map(intent => ({
-        ...intent,
-        total: intent.total * (0.9 + Math.random() * 0.2),
-        aiCompleted: intent.aiCompleted * (0.9 + Math.random() * 0.2),
-        liveAgentCompleted: intent.liveAgentCompleted * (0.9 + Math.random() * 0.2),
-        completionRate: intent.completionRate * (0.9 + Math.random() * 0.2),
-      }));
-      
-      // Update state with new data
-      setKpiData(newKpiData);
-      setIntentData(newIntentData);
-      setTrendData(generateTrendData());
-      
-      // Filter sentiment data based on the selected time period
-      const filteredSentimentData = generateSentimentData().slice(
-        0, 
-        filter === 'Today' ? 20 : 
-        filter === 'Yesterday' ? 25 : 
-        filter === 'Last 7 Days' ? 70 : 100
-      );
-      setSentimentData(filteredSentimentData);
-    }, 300);
-  };
-  
-  // Handle intent filter change
-  const handleIntentChange = (intent: string) => {
-    setSelectedIntent(intent);
-    console.log("Intent changed to:", intent);
-  };
-  
-  // Handle agent filter change
-  const handleAgentChange = (agent: string) => {
-    setSelectedAgent(agent);
-    console.log("Agent changed to:", agent);
-  };
+  const [activeTab, setActiveTab] = React.useState('overview');
   
   // Animation effect - staggered entrance
   useEffect(() => {
@@ -141,21 +44,6 @@ const Index = () => {
       }, 100 * index);
     });
   }, [activeTab]);
-
-  // Generate bar data for charts
-  const generateBarData = () => {
-    return [
-      { name: 'Mon', ai: 120, agent: 45 },
-      { name: 'Tue', ai: 132, agent: 49 },
-      { name: 'Wed', ai: 101, agent: 52 },
-      { name: 'Thu', ai: 134, agent: 47 },
-      { name: 'Fri', ai: 190, agent: 60 },
-      { name: 'Sat', ai: 90, agent: 30 },
-      { name: 'Sun', ai: 85, agent: 25 },
-    ];
-  };
-
-  const barData = generateBarData();
   
   return (
     <div className="container py-6 mx-auto max-w-7xl animate-fade-in">
