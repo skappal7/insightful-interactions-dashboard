@@ -87,6 +87,8 @@ const Index = () => {
             trendData={trendData}
             summaryHtml={summaryHtml}
             kpiDescriptions={kpiDescriptions}
+            selectedIntent={selectedIntent}
+            onIntentChange={handleIntentChange}
           />
         </TabsContent>
         
