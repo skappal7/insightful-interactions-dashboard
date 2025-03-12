@@ -15,12 +15,20 @@ interface FilterBarProps {
   dateFilters: DateFilter[];
   selectedFilter: string;
   onFilterChange: (filter: string) => void;
+  selectedIntent?: string;
+  onIntentChange?: (intent: string) => void;
+  selectedAgent?: string;
+  onAgentChange?: (agent: string) => void;
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({ 
   dateFilters, 
   selectedFilter, 
-  onFilterChange 
+  onFilterChange,
+  selectedIntent = 'all-intents',
+  onIntentChange = () => {},
+  selectedAgent = 'all-agents',
+  onAgentChange = () => {},
 }) => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 bg-card rounded-lg border p-4 mb-6 animate-fade-in">
@@ -43,7 +51,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
       </div>
       
       <div className="flex items-center gap-4">
-        <Select defaultValue="all-intents">
+        <Select 
+          value={selectedIntent} 
+          onValueChange={onIntentChange}
+        >
           <SelectTrigger className="w-[180px] h-8">
             <SelectValue placeholder="Filter by Intent" />
           </SelectTrigger>
@@ -55,7 +66,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
           </SelectContent>
         </Select>
         
-        <Select defaultValue="all-agents">
+        <Select 
+          value={selectedAgent} 
+          onValueChange={onAgentChange}
+        >
           <SelectTrigger className="w-[180px] h-8">
             <SelectValue placeholder="Filter by Agent" />
           </SelectTrigger>

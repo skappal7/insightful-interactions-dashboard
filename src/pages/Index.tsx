@@ -43,13 +43,28 @@ const Index = () => {
   const [trendData, setTrendData] = useState(generateTrendData());
   const [dateFilters, setDateFilters] = useState(generateDateFilters());
   const [selectedFilter, setSelectedFilter] = useState('Last 7 Days');
+  const [selectedIntent, setSelectedIntent] = useState('all-intents');
+  const [selectedAgent, setSelectedAgent] = useState('all-agents');
   const [activeTab, setActiveTab] = useState('overview');
   
+  // Filter data based on intent and agent selections
+  const filteredIntentData = intentData.filter(intent => {
+    if (selectedIntent === 'all-intents') return true;
+    return intent.category === selectedIntent;
+  });
+  
+  const filteredResponseData = responseData.filter(response => {
+    if (selectedAgent === 'all-agents') return true;
+    if (selectedAgent === 'ai-only') return response.aiHandled;
+    if (selectedAgent === 'live-only') return !response.aiHandled;
+    return true;
+  });
+  
   // Derived data
-  const topCompletedIntents = getTopIntents(intentData, true);
-  const topIncompleteIntents = getTopIntents(intentData, false);
-  const aiResponses = getTopResponses(responseData, true);
-  const liveAgentResponses = getTopResponses(responseData, false);
+  const topCompletedIntents = getTopIntents(filteredIntentData, true);
+  const topIncompleteIntents = getTopIntents(filteredIntentData, false);
+  const aiResponses = getTopResponses(filteredResponseData, true);
+  const liveAgentResponses = getTopResponses(filteredResponseData, false);
   const sentimentImprovement = calculateSentimentImprovement(sentimentData);
   
   // Executive summary
@@ -61,7 +76,7 @@ const Index = () => {
     kpiData.find(kpi => kpi.title === 'Completion %')?.value || 0
   );
   
-  // Handle filter change (simulated data refresh)
+  // Handle filter changes (date, intent, and agent)
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
     
@@ -99,6 +114,18 @@ const Index = () => {
     }, 300);
   };
   
+  // Handle intent filter change
+  const handleIntentChange = (intent: string) => {
+    setSelectedIntent(intent);
+    console.log("Intent changed to:", intent);
+  };
+  
+  // Handle agent filter change
+  const handleAgentChange = (agent: string) => {
+    setSelectedAgent(agent);
+    console.log("Agent changed to:", agent);
+  };
+  
   // Animation effect - staggered entrance
   useEffect(() => {
     const cards = document.querySelectorAll('.dashboard-card');
@@ -132,6 +159,10 @@ const Index = () => {
         dateFilters={dateFilters}
         selectedFilter={selectedFilter}
         onFilterChange={handleFilterChange}
+        selectedIntent={selectedIntent}
+        onIntentChange={handleIntentChange}
+        selectedAgent={selectedAgent}
+        onAgentChange={handleAgentChange}
       />
       
       <Tabs defaultValue="overview" className="w-full" onValueChange={setActiveTab}>
