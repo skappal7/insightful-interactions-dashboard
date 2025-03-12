@@ -64,18 +64,6 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
               </TooltipProvider>
             )}
           </div>
-          <div className="flex items-center text-xs font-medium">
-            {isPositiveTrend ? (
-              <ArrowUp className={`${trendColor} mr-1 h-3 w-3`} />
-            ) : trend < 0 ? (
-              <ArrowDown className={`${trendColor} mr-1 h-3 w-3`} />
-            ) : trend > 0 ? (
-              <ArrowDown className={`${trendColor} mr-1 h-3 w-3`} />
-            ) : null}
-            <span className={trendColor}>
-              {Math.round(trendAbs)}%
-            </span>
-          </div>
         </div>
         
         <div className="text-xl font-bold">
