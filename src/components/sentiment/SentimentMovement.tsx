@@ -64,7 +64,7 @@ const SentimentMovement: React.FC<SentimentMovementProps> = ({
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="improved" name="Improved Conversations" fill={(entry) => entry.color} />
+              <Bar dataKey="improved" name="Improved Conversations" fill="#60A5FA" />
             </BarChart>
           </ResponsiveContainer>
         </Card>

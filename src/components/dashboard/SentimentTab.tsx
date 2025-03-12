@@ -11,7 +11,6 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { DatePickerWithRange } from '@/components/ui/date-picker';
 import { CalendarIcon, FilterIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
