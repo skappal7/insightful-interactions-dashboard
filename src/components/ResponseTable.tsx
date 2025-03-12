@@ -33,10 +33,10 @@ const ResponseTable: React.FC<ResponseTableProps> = ({ data, title, aiHandled })
               {data.map((response) => (
                 <tr key={response.query} className="text-sm hover:bg-muted/50 transition-colors">
                   <td className="font-medium truncate max-w-[200px]">{response.query}</td>
-                  <td className="text-right">{response.frequency}</td>
+                  <td className="text-right">{Math.round(response.frequency)}</td>
                   <td className="text-center">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCompletionColor(response.completionRate)}`}>
-                      {response.completionRate.toFixed(1)}%
+                      {Math.round(response.completionRate)}%
                     </span>
                   </td>
                 </tr>

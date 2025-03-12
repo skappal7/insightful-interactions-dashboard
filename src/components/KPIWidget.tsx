@@ -25,7 +25,7 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
   description = ''
 }) => {
   const trendColor = getTrendIndicator(trend);
-  const formattedValue = value.toLocaleString();
+  const formattedValue = Math.round(value).toLocaleString();
   const trendAbs = Math.abs(trend);
   
   return (
@@ -52,7 +52,7 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
               <ArrowDown className={`${trendColor} mr-1 h-3 w-3`} />
             ) : null}
             <span className={trendColor}>
-              {trendAbs.toFixed(1)}% {trend > 0 ? 'increase' : 'decrease'}
+              {Math.round(trendAbs)}% {trend > 0 ? 'increase' : 'decrease'}
             </span>
           </div>
         </div>

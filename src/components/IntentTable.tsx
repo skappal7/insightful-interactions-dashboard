@@ -31,12 +31,12 @@ const IntentTable: React.FC<IntentTableProps> = ({ data, title }) => {
               {data.map((intent) => (
                 <tr key={intent.name} className="text-sm hover:bg-muted/50 transition-colors">
                   <td className="font-medium">{intent.name}</td>
-                  <td className="text-right">{intent.total}</td>
-                  <td className="text-right">{intent.aiCompleted}</td>
-                  <td className="text-right">{intent.liveAgentCompleted}</td>
+                  <td className="text-right">{Math.round(intent.total)}</td>
+                  <td className="text-right">{Math.round(intent.aiCompleted)}</td>
+                  <td className="text-right">{Math.round(intent.liveAgentCompleted)}</td>
                   <td className="text-center">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCompletionColor(intent.completionRate)}`}>
-                      {intent.completionRate.toFixed(1)}%
+                      {Math.round(intent.completionRate)}%
                     </span>
                   </td>
                 </tr>
