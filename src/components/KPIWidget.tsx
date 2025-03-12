@@ -27,16 +27,22 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
   // For metrics where a decrease is actually positive
   const isInverseMetric = title.toLowerCase().includes('escalation') || 
                          title.toLowerCase().includes('repeat') || 
+                         title.toLowerCase().includes('average handle time') || 
                          title.toLowerCase().includes('aht') || 
                          title.toLowerCase().includes('transfers') ||
-                         (title.toLowerCase().includes('calls') && title.toLowerCase().includes('short'));
+                         title.toLowerCase().includes('long calls');
   
-  const isPositiveTrend = isInverseMetric ? trend < 0 : trend > 0;
+  // For "Short Calls", an increase is negative and decrease is positive
+  const isShortCallsMetric = title.toLowerCase().includes('short calls');
   
-  const trendColor = isInverseMetric 
-    ? (trend < 0 ? 'text-dashboard-positive' : trend > 0 ? 'text-dashboard-negative' : 'text-dashboard-neutral')
-    : getTrendIndicator(trend);
-    
+  // Determine if trend is positive based on metric type
+  const isPositiveTrend = isInverseMetric 
+    ? trend < 0 
+    : isShortCallsMetric 
+      ? trend < 0 
+      : trend > 0;
+  
+  const trendColor = isPositiveTrend ? 'text-dashboard-positive' : 'text-dashboard-negative';
   const formattedValue = Math.round(value).toLocaleString();
   const trendAbs = Math.abs(trend);
   
@@ -62,7 +68,7 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
                   <TooltipTrigger asChild>
                     <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent side="right" className="max-w-xs bg-white dark:bg-slate-800 shadow-lg border rounded-lg p-2">
+                  <TooltipContent side="right" className="max-w-xs bg-white dark:bg-slate-800 shadow-lg border rounded-lg p-2 z-50">
                     <p className="text-xs">{description}</p>
                   </TooltipContent>
                 </Tooltip>
@@ -86,15 +92,15 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
             </div>
             <div className="mt-3 flex justify-center">
               <span className={`${getGradientPill()} text-xs font-medium px-3 py-1 rounded-full inline-flex items-center`}>
-                {isPositiveTrend ? (
+                {trend > 0 ? (
                   <>
                     <ArrowUp className="h-3 w-3 mr-1" />
-                    {Math.round(trendAbs)}% {isInverseMetric ? 'reduction' : 'increase'}
+                    {Math.round(trendAbs)}% {isInverseMetric || isShortCallsMetric ? 'increase' : 'increase'}
                   </>
-                ) : trend !== 0 ? (
+                ) : trend < 0 ? (
                   <>
                     <ArrowDown className="h-3 w-3 mr-1" />
-                    {Math.round(trendAbs)}% {isInverseMetric ? 'increase' : 'decrease'}
+                    {Math.round(trendAbs)}% {isInverseMetric || isShortCallsMetric ? 'reduction' : 'decrease'}
                   </>
                 ) : (
                   'No change'

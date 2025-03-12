@@ -23,9 +23,9 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   kpiDescriptions
 }) => {
   return (
-    <>
+    <div className="space-y-6 animate-fade-in">
       {/* First row of KPI widgets, 3 per row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {kpiData.slice(0, 3).map((kpi) => (
           <KPIWidget
             key={kpi.title}
@@ -40,7 +40,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
       </div>
       
       {/* Second row of KPI widgets, 3 per row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {kpiData.slice(3, 6).map((kpi) => (
           <KPIWidget
             key={kpi.title}
@@ -54,7 +54,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
         ))}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <IntentTable 
           data={topCompletedIntents} 
           title="Top Completed Intents" 
@@ -65,10 +65,10 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
         />
       </div>
       
-      <div className="mt-6">
+      <div>
         <ExecutiveSummary summaryHtml={summaryHtml} />
       </div>
-    </>
+    </div>
   );
 };
 

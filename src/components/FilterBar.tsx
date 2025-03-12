@@ -16,10 +16,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
   onFilterChange
 }) => {
   return (
-    <div className="flex items-center justify-between gap-4 bg-card rounded-lg border p-4 mb-6 animate-fade-in">
+    <div className="flex items-center justify-between gap-4 bg-card rounded-lg border p-4 mb-6 animate-fade-in shadow-sm hover:shadow-md transition-all duration-300">
       <div className="flex items-center gap-2">
-        <Calendar className="h-5 w-5 text-muted-foreground" />
-        <span className="font-medium text-sm">Time Period:</span>
+        <Calendar className="h-5 w-5 text-primary" />
+        <span className="font-medium text-sm text-primary">Time Period:</span>
         <div className="flex flex-wrap gap-2">
           {dateFilters.map((filter) => (
             <Button
@@ -27,7 +27,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
               variant={selectedFilter === filter.label ? "default" : "outline"}
               size="sm"
               onClick={() => onFilterChange(filter.label)}
-              className="h-8 transition-all duration-200"
+              className={`h-8 transition-all duration-200 ${
+                selectedFilter === filter.label ? 'shadow-sm' : ''
+              }`}
             >
               {filter.label}
             </Button>
