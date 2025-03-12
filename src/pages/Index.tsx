@@ -9,6 +9,7 @@ import SentimentTracker from '@/components/SentimentTracker';
 import ExecutiveSummary from '@/components/ExecutiveSummary';
 import FilterBar from '@/components/FilterBar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 import { 
   BarChart,
   LineChart,
