@@ -68,18 +68,24 @@ const CustomerDecompositionTree: React.FC<CustomerDecompositionTreeProps> = ({
   const livePercentage = Math.round((liveAgentCount / totalConversations) * 100);
   
   // Calculate AI metrics
-  const aiEscalatedCount = sentimentData.filter(s => s.aiHandled && s.escalated).length;
+  // Fixed: Using startSentiment == 'negative' and endSentiment !== 'negative' to determine escalation
+  // instead of non-existent 'escalated' property
+  const aiEscalatedCount = sentimentData.filter(s => 
+    s.aiHandled && 
+    s.startSentiment === 'negative' && 
+    s.endSentiment === 'negative'
+  ).length;
   const aiResolvedCount = aiHandledCount - aiEscalatedCount;
   
-  const aiEscalatedPercentage = Math.round((aiEscalatedCount / aiHandledCount) * 100);
-  const aiResolvedPercentage = Math.round((aiResolvedCount / aiHandledCount) * 100);
+  const aiEscalatedPercentage = Math.round((aiEscalatedCount / aiHandledCount) * 100) || 0;
+  const aiResolvedPercentage = Math.round((aiResolvedCount / aiHandledCount) * 100) || 0;
   
   // Calculate Live Agent metrics
   const liveResolvedCount = sentimentData.filter(s => !s.aiHandled && s.endSentiment !== 'negative').length;
   const liveUnresolvedCount = liveAgentCount - liveResolvedCount;
   
-  const liveResolvedPercentage = Math.round((liveResolvedCount / liveAgentCount) * 100);
-  const liveUnresolvedPercentage = Math.round((liveUnresolvedCount / liveAgentCount) * 100);
+  const liveResolvedPercentage = Math.round((liveResolvedCount / liveAgentCount) * 100) || 0;
+  const liveUnresolvedPercentage = Math.round((liveUnresolvedCount / liveAgentCount) * 100) || 0;
   
   return (
     <Card className="dashboard-card overflow-hidden transition-all duration-300">
@@ -150,7 +156,7 @@ const CustomerDecompositionTree: React.FC<CustomerDecompositionTreeProps> = ({
             <li>• Digital agents handle {aiPercentage}% of total customer conversations</li>
             <li>• {aiResolvedPercentage}% of digital agent conversations are resolved without escalation</li>
             <li>• Live agents successfully resolve {liveResolvedPercentage}% of their conversations</li>
-            <li>• Top resolved intent: {topIntents[0]?.intent || 'N/A'} ({topIntents[0]?.completionRate || 0}% completion)</li>
+            <li>• Top resolved intent: {topIntents[0]?.name || 'N/A'} ({topIntents[0]?.completionRate || 0}% completion)</li>
           </ul>
         </div>
       </CardContent>
