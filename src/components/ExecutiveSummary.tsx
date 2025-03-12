@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { Info } from 'lucide-react';
 
 interface ExecutiveSummaryProps {
   summaryHtml: string;
@@ -15,7 +15,7 @@ const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({ summaryHtml }) => {
         <CardTitle className="text-base font-medium">Executive Summary</CardTitle>
         <Tooltip>
           <TooltipTrigger asChild>
-            <InfoCircledIcon className="h-4 w-4 text-muted-foreground cursor-help" />
+            <Info className="h-4 w-4 text-muted-foreground cursor-help" />
           </TooltipTrigger>
           <TooltipContent>
             <p className="w-64">Summary of key performance metrics and insights across AI and live agent interactions</p>

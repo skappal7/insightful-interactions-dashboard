@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SentimentData } from '@/utils/mockData';
 import { getSentimentColor } from '@/utils/dashboardUtils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { Info } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 
 interface SentimentTrackerProps {
@@ -102,7 +101,7 @@ const SentimentTracker: React.FC<SentimentTrackerProps> = ({ data }) => {
         <CardTitle className="text-base font-medium">Sentiment Analysis & Movement</CardTitle>
         <Tooltip>
           <TooltipTrigger asChild>
-            <InfoCircledIcon className="h-4 w-4 text-muted-foreground cursor-help" />
+            <Info className="h-4 w-4 text-muted-foreground cursor-help" />
           </TooltipTrigger>
           <TooltipContent>
             <p className="w-64">Analysis of customer sentiment throughout conversations and how it changes over time</p>
