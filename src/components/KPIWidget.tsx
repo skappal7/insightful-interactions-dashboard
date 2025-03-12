@@ -24,15 +24,22 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
   trendData = [],
   description = ''
 }) => {
-  const trendColor = getTrendIndicator(trend);
+  // For escalation metrics, a decrease (negative trend) is actually positive
+  const isEscalationMetric = title.toLowerCase().includes('escalation');
+  const isPositiveTrend = isEscalationMetric ? trend < 0 : trend > 0;
+  
+  const trendColor = isEscalationMetric 
+    ? (trend < 0 ? 'text-dashboard-positive' : trend > 0 ? 'text-dashboard-negative' : 'text-dashboard-neutral')
+    : getTrendIndicator(trend);
+    
   const formattedValue = Math.round(value).toLocaleString();
   const trendAbs = Math.abs(trend);
   
-  // Define gradient styles based on trend
+  // Define gradient styles based on trend and metric type
   const getGradientPill = () => {
-    if (trend > 0) {
+    if (isPositiveTrend) {
       return "bg-gradient-to-r from-green-100 to-green-300 text-green-900";
-    } else if (trend < 0) {
+    } else if (!isPositiveTrend && trend !== 0) {
       return "bg-gradient-to-r from-red-100 to-red-300 text-red-900";
     }
     return "bg-gradient-to-r from-gray-100 to-gray-300 text-gray-900";
@@ -58,13 +65,15 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
             )}
           </div>
           <div className="flex items-center text-xs font-medium">
-            {trend > 0 ? (
+            {isPositiveTrend ? (
               <ArrowUp className={`${trendColor} mr-1 h-3 w-3`} />
             ) : trend < 0 ? (
               <ArrowDown className={`${trendColor} mr-1 h-3 w-3`} />
+            ) : trend > 0 ? (
+              <ArrowDown className={`${trendColor} mr-1 h-3 w-3`} />
             ) : null}
             <span className={trendColor}>
-              {Math.round(trendAbs)}% {trend > 0 ? 'increase' : 'decrease'}
+              {Math.round(trendAbs)}% {isPositiveTrend ? 'improvement' : (trend !== 0 ? 'decline' : 'no change')}
             </span>
           </div>
         </div>
@@ -78,22 +87,24 @@ const KPIWidget: React.FC<KPIWidgetProps> = ({
             <div className="mt-2">
               <TrendLine 
                 data={trendData} 
-                color={trend >= 0 ? '#34D399' : '#F87171'} 
+                color={isPositiveTrend ? '#34D399' : '#F87171'} 
                 height={30}
               />
             </div>
-            <div className="mt-2">
-              <span className={`${getGradientPill()} text-xs font-medium px-3 py-1 rounded-full inline-block`}>
-                {trend > 0 ? (
-                  <span className="flex items-center">
+            <div className="mt-3 flex justify-center">
+              <span className={`${getGradientPill()} text-xs font-medium px-3 py-1 rounded-full inline-flex items-center`}>
+                {isPositiveTrend ? (
+                  <>
                     <ArrowUp className="h-3 w-3 mr-1" />
-                    {Math.round(trendAbs)}% increase
-                  </span>
-                ) : (
-                  <span className="flex items-center">
+                    {Math.round(trendAbs)}% {isEscalationMetric ? 'reduction' : 'increase'}
+                  </>
+                ) : trend !== 0 ? (
+                  <>
                     <ArrowDown className="h-3 w-3 mr-1" />
-                    {Math.round(trendAbs)}% decrease
-                  </span>
+                    {Math.round(trendAbs)}% {isEscalationMetric ? 'increase' : 'decrease'}
+                  </>
+                ) : (
+                  'No change'
                 )}
               </span>
             </div>
